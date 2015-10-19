@@ -71,3 +71,9 @@ EngineTest.prototype.testHistoire9 = function () {
         e.onPlayed("a3")
     }, "ExceptionBoard");
 };
+
+EngineTest.prototype.testHistoire10 = function () {
+    var e = new Engine();
+    e.onPlayed("b1");
+
+};

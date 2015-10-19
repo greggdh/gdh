@@ -22,6 +22,15 @@ var Engine = function () {
         return cpt;
     };
 
+    var newArray = function (max) {
+        var i;
+        var tab1 = new Array(max);
+        for (i = 0; i < max; i++) {
+            tab1[i] = new Array(max);
+        }
+        return tab1;
+    };
+
     this.startToken = function () {
         var cpt = 0, i, j;
         for (i = 0; i < 6; i++) {
@@ -98,8 +107,8 @@ var Engine = function () {
         return tab;
     };
 
-    this.rotation = function (part, direction) {
-        var premI, premJ, i, j;
+    var getPart = function (part) {
+        var premI, premJ;
         if (part === 1) {
             premI = 0;
             premJ = 0;
@@ -116,21 +125,24 @@ var Engine = function () {
             premI = 3;
             premJ = 3;
         }
+        return {"i" : premI, "j" : premJ};
+    };
 
-        var tab1 = new Array(3);
-        for (i = 0; i < 3; i++) {
-            tab1[i] = new Array(3);
-        }
+    this.rotation = function (part, direction) {
+        var prem, i, j;
+        prem = getPart(part);
+
+        var tab1 = newArray(3);
 
         for (i = 0; i < 3; i++) {
             for (j = 0; j < 3; j++) {
-                tab1[i][j] = board[i + premI][j + premJ];
+                tab1[i][j] = board[i + prem.i][j + prem.j];
             }
         }
         var tab2 = rotaMiniBoard(tab1, direction);
         for (i = 0; i < 3; i++) {
             for (j = 0; j < 3; j++) {
-                board[i + premI][j + premJ] = tab2[i][j];
+                board[i + prem.i][j + prem.j] = tab2[i][j];
             }
         }
         this.nextPlayer();
