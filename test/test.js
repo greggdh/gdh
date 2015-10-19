@@ -34,3 +34,12 @@ EngineTest.prototype.testf= function() {
     e.nextPlayer();
     assertTrue(e.currentPlayer()== 2);
 };
+EngineTest.prototype.testHistoire7= function() {
+    var e = new Engine();
+    e.onPlayed("a1");
+    e.rotation(1);
+    e.nextPlayer();
+    e.onPlayed("a1");
+    assertTrue(e.getCase("a1")== 2);
+    assertTrue(e.startToken()== 2);
+};
