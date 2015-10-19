@@ -64,21 +64,30 @@ var Engine = function(){
 
     };
 
-    var rotaMiniBoard = function(tab1){
+    var rotaMiniBoard = function(tab1, direction) {
         var tab = new Array(3);
-        for(i=0; i < 3 ; i++){
+        for (i = 0; i < 3; i++) {
             tab[i] = new Array(3);
         }
-
-        for(i=0; i < 3 ; i++){
-            for(j=0; j < 3 ; j++){
-                tab[i][j] = tab1[j][2 - i];
+        if (direction){
+            for (i = 0; i < 3; i++) {
+                for (j = 0; j < 3; j++) {
+                    tab[i][j] = tab1[j][2 - i];
+                }
             }
         }
-        return tab;
-    }
+        else{
+            for (i = 0; i < 3; i++) {
+                for (j = 0; j < 3; j++) {
+                    tab[i][j] = tab1[2-j][i];
+                }
+            }
+        }
 
-    this.rotation = function(part){
+        return tab;
+    };
+
+    this.rotation = function(part, direction){
         var premI, premJ, i, j;
         if (part == 1) {
             premI = 0;
@@ -107,7 +116,7 @@ var Engine = function(){
                 tab1[i][j] = board[i+premI][j+premJ];
             }
         }
-        var tab2 =rotaMiniBoard(tab1);
+        var tab2 =rotaMiniBoard(tab1, direction);
         for(i=0; i < 3 ; i++){
             for(j=0; j < 3 ; j++){
                 board[i+premI][j+premJ] = tab2[i][j];

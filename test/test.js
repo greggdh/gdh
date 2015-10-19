@@ -25,7 +25,7 @@ EngineTest.prototype.testD= function() {
 EngineTest.prototype.teste= function() {
     var e = new Engine();
     e.onPlayed("a1");
-    e.rotation(1);
+    e.rotation(1, 1);
     assertTrue(e.getCase("c1")== 1);
 };
 
@@ -37,9 +37,29 @@ EngineTest.prototype.testf= function() {
 EngineTest.prototype.testHistoire7= function() {
     var e = new Engine();
     e.onPlayed("a1");
-    e.rotation(1);
+    e.rotation(1, 1);
     e.nextPlayer();
     e.onPlayed("a1");
     assertTrue(e.getCase("a1")== 2);
     assertTrue(e.startToken()== 2);
+};
+
+EngineTest.prototype.testHistoire7= function() {
+    var e = new Engine();
+    e.onPlayed("a1");
+    e.rotation(1, 0);
+    e.nextPlayer();
+    e.onPlayed("a1");
+    assertTrue(e.getCase("a1")== 2);
+    assertTrue(e.startToken()== 2);
+};
+EngineTest.prototype.testHistoire8= function() {
+    var e = new Engine();
+    e.onPlayed("a1");
+    e.rotation(1, 1);
+    e.nextPlayer();
+    e.onPlayed("a1");
+    e.rotation(1, 0);
+    assertTrue(e.getCase("a1")== 1);
+    assertTrue(e.getCase("a3")== 2);
 };
