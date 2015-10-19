@@ -1,3 +1,7 @@
+function ExceptionBoard(){
+    this.name = "ExceptionBoard";
+}
+
 var Engine = function(){
     var player1 = 1;
     var player2 = 2;
@@ -56,11 +60,13 @@ var Engine = function(){
 
     };
 
+
     this.onPlayed = function(coup1) {
         var i, j;
         var ligne = coup1.charCodeAt(0) - 97;
         var colone = coup1.charCodeAt(1) - 49;
-        board[ligne][colone] = curPlayer;
+        if (board[ligne][colone] == 0) board[ligne][colone] = curPlayer;
+        else throw new ExceptionBoard();
 
     };
 
@@ -122,10 +128,10 @@ var Engine = function(){
                 board[i+premI][j+premJ] = tab2[i][j];
             }
         }
+        this.nextPlayer();
     };
 
     this.nextPlayer = function(){
         if (curPlayer==1) curPlayer = 2;
     };
-
 };
