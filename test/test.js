@@ -74,6 +74,10 @@ EngineTest.prototype.testHistoire9 = function () {
 
 EngineTest.prototype.testHistoire10 = function () {
     var e = new Engine();
+    e.onPlayed("a1");
+    e.rotation(1, 1);
+    e.onPlayed("a1");
+    e.rotation(1, 0);
     e.onPlayed("b1");
     e.rotation(1, 1);
     e.onPlayed("a2");
@@ -86,10 +90,12 @@ EngineTest.prototype.testHistoire10 = function () {
     e.rotation(2, 0);
     e.onPlayed("f3");
     e.rotation(2, 1);
-    assertTrue(e.coupPlayed() === 6);
+    assertTrue(e.coupPlayed() === 8);
+    assertTrue(e.getCase("a1") === 1);
     assertTrue(e.getCase("b1") === 1);
     assertTrue(e.getCase("c1") === 1);
     assertTrue(e.getCase("d1") === 1);
+    assertTrue(e.getCase("a3") === 2);
     assertTrue(e.getCase("b3") === 2);
     assertTrue(e.getCase("c3") === 2);
     assertTrue(e.getCase("d3") === 2);
