@@ -7,18 +7,29 @@ var Engine = function () {
     "use strict";
     var player1 = 1, player2 = 2, curPlayer, board = new Array(6);
 
+    var foreach = function (n, callback) {
+        var i, j;
+        for (i = 0; i < n; i++) {
+            for (j = 0; j < n; j++) {
+                callback(i, j);
+            }
+        }
+    };
+
+    var boardLoop = function (callback) {
+        foreach(6, callback);
+    };
+
     this.currentPlayer = function () {
         return curPlayer;
     };
     this.coupPlayed = function () {
-        var cpt = 0, i, j;
-        for (i = 0; i < 6; i++) {
-            for (j = 0; j < 6; j++) {
-                if (board[i][j] !== 0) {
-                    cpt++;
-                }
+        var cpt = 0;
+        boardLoop(function (i, j) {
+            if (board[i][j] !== 0) {
+                cpt++;
             }
-        }
+        });
         return cpt;
     };
 
@@ -32,14 +43,12 @@ var Engine = function () {
     };
 
     this.startToken = function () {
-        var cpt = 0, i, j;
-        for (i = 0; i < 6; i++) {
-            for (j = 0; j < 6; j++) {
-                if (board[i][j] !== 0) {
-                    cpt++;
-                }
+        var cpt = 0;
+        boardLoop(function (i, j) {
+            if (board[i][j] !== 0) {
+                cpt++;
             }
-        }
+        });
         return cpt;
     };
 
@@ -54,9 +63,7 @@ var Engine = function () {
 
     var init = function () {
         var i, j;
-        for (i = 0; i < 6; i++) {
-            board[i] = new Array(6);
-        }
+        board = newArray(6);
         for (i = 0; i < 6; i++) {
             for (j = 0; j < 6; j++) {
                 board[i][j] = 0;
@@ -64,7 +71,6 @@ var Engine = function () {
         }
         curPlayer = 1;
     };
-    init();
 
     this.getCase = function (coup) {
         var ligne = coup.charCodeAt(0) - 97;
@@ -85,40 +91,26 @@ var Engine = function () {
     };
 
     var rotaMiniBoard = function (tab1, direction) {
-        var tab = new Array(3);
-        var i, j;
-        for (i = 0; i < 3; i++) {
-            tab[i] = new Array(3);
-        }
+        var tab = newArray(3);
         if (direction) {
-            for (i = 0; i < 3; i++) {
-                for (j = 0; j < 3; j++) {
-                    tab[i][j] = tab1[j][2 - i];
-                }
-            }
+            foreach(3, function (i, j) {
+                tab[i][j] = tab1[j][2 - i];
+            });
         } else {
-            for (i = 0; i < 3; i++) {
-                for (j = 0; j < 3; j++) {
-                    tab[i][j] = tab1[2 - j][i];
-                }
-            }
+            foreach(3, function (i, j) {
+                tab[i][j] = tab1[2 - j][i];
+            });
         }
 
         return tab;
     };
 
     var getPart = function (part) {
-        var premI, premJ;
-        if (part === 1) {
-            premI = 0;
-            premJ = 0;
-        }
+        var premI = 0, premJ = 0;
         if (part === 2) {
             premI = 3;
-            premJ = 0;
         }
         if (part === 3) {
-            premI = 0;
             premJ = 3;
         }
         if (part === 4) {
@@ -129,28 +121,27 @@ var Engine = function () {
     };
 
     this.rotation = function (part, direction) {
-        var prem, i, j;
+        var prem;
         prem = getPart(part);
 
         var tab1 = newArray(3);
 
-        for (i = 0; i < 3; i++) {
-            for (j = 0; j < 3; j++) {
-                tab1[i][j] = board[i + prem.i][j + prem.j];
-            }
-        }
+        foreach(3, function (i, j) {
+            tab1[i][j] = board[i + prem.i][j + prem.j];
+        });
         var tab2 = rotaMiniBoard(tab1, direction);
-        for (i = 0; i < 3; i++) {
-            for (j = 0; j < 3; j++) {
-                board[i + prem.i][j + prem.j] = tab2[i][j];
-            }
-        }
+        foreach(3, function (i, j) {
+            board[i + prem.i][j + prem.j] = tab2[i][j];
+        });
         this.nextPlayer();
     };
 
     this.nextPlayer = function () {
         if (curPlayer === 1) {
             curPlayer = 2;
+        } else {
+            curPlayer = 1;
         }
     };
+    init();
 };
