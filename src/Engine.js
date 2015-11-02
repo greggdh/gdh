@@ -5,7 +5,7 @@ function ExceptionBoard() {
 
 var Engine = function () {
     "use strict";
-    var player1 = 1, player2 = 2, curPlayer, board = new Array(6);
+    var player1 = 1, player2 = 2, curPlayer, board = new Array(6), winer = 0;
 
     var foreach = function (n, callback) {
         var i, j;
@@ -85,6 +85,7 @@ var Engine = function () {
         var colone = coup1.charCodeAt(1) - 49;
         if (board[ligne][colone] === 0) {
             board[ligne][colone] = curPlayer;
+            this.testWin();
         } else {
             throw new ExceptionBoard();
         }
@@ -142,6 +143,47 @@ var Engine = function () {
         } else {
             curPlayer = 1;
         }
+    };
+
+    var foreachHz = function (n, callback) {
+        var i;
+        for (i = 0; i < n; i++) {
+            callback(i);
+        }
+    };
+
+    var foreachVt = function (n, callback) {
+        var j;
+        for (j = 0; j < n; j++) {
+            callback(j);
+        }
+    };
+
+    this.testWin = function () {
+        var cpt1 = 0, cpt2 = 0;
+        foreachHz(6, function (i) {
+            foreachVt(6, function (j) {
+                if (board[j][i] === 1) {
+                    cpt1++;
+                    if (cpt1 === 5) {
+                        winer = 1;
+                        return 0;
+                    }
+                }
+                if (board[j][i] === 2) {
+                    cpt2++;
+                    if (cpt2 === 5) {
+                        winer = 2;
+                        return 0;
+                    }
+                }
+            });
+            cpt1 = 0;
+            cpt2 = 0;
+        });
+    };
+    this.getWiner = function () {
+        return winer;
     };
     init();
 };
