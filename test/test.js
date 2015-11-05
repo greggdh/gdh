@@ -1,41 +1,41 @@
 EngineTest = TestCase("TestUnitaire");
 
 EngineTest.prototype.testA = function () {
-    var e = new Engine("nm");
+    var e = new Engine();
     assertTrue(e.startToken() === 0);
 };
 
 EngineTest.prototype.testB = function () {
-    var e = new Engine("nm");
+    var e = new Engine();
     assertTrue(e.getPlayer(1, "blanc") === "blanc");
 };
 
 EngineTest.prototype.testC = function () {
-    var e = new Engine("nm");
+    var e = new Engine();
     e.onPlayed("a1", "blanc");
     assertTrue(e.getCase("a1", "blanc") === 1);
 };
 
 EngineTest.prototype.testD = function () {
-    var e = new Engine("nm");
+    var e = new Engine();
     e.onPlayed("a1", "blanc");
     assertTrue(e.coupPlayed() === 1);
 };
 
 EngineTest.prototype.teste = function () {
-    var e = new Engine("nm");
+    var e = new Engine();
     e.onPlayed("a1", "blanc");
     e.rotation("tl", "c");
     assertTrue(e.getCase("c1") === 1);
 };
 
 EngineTest.prototype.testf = function () {
-    var e = new Engine("nm");
+    var e = new Engine();
     e.nextPlayer();
     assertTrue(e.currentPlayer() === 2);
 };
 EngineTest.prototype.testHistoire6 = function () {
-    var e = new Engine("nm");
+    var e = new Engine();
     e.onPlayed("a1", "blanc");
     e.rotation("tl", "c");
     e.onPlayed("a1", "noir");
@@ -44,7 +44,7 @@ EngineTest.prototype.testHistoire6 = function () {
 };
 
 EngineTest.prototype.testHistoire7 = function () {
-    var e = new Engine("nm");
+    var e = new Engine();
     e.onPlayed("a1", "blanc");
     e.rotation("tl", "a");
     e.onPlayed("a1", "noir");
@@ -52,7 +52,7 @@ EngineTest.prototype.testHistoire7 = function () {
     assertTrue(e.startToken() === 2);
 };
 EngineTest.prototype.testHistoire8 = function () {
-    var e = new Engine("nm");
+    var e = new Engine();
     e.onPlayed("a1", "blanc");
     e.rotation("tl", "c");
     e.onPlayed("a1", "noir");
@@ -62,7 +62,7 @@ EngineTest.prototype.testHistoire8 = function () {
 };
 
 EngineTest.prototype.testHistoire9 = function () {
-    var e = new Engine("nm");
+    var e = new Engine();
     e.onPlayed("a1", "blanc");
     e.rotation("tl", 1);
     e.onPlayed("a1", "noir");
@@ -73,7 +73,7 @@ EngineTest.prototype.testHistoire9 = function () {
 };
 
 EngineTest.prototype.testHistoire10 = function () {
-    var e = new Engine("nm");
+    var e = new Engine();
     e.onPlayed("a1", "blanc");
     e.rotation("tl", "c");
     e.onPlayed("a1", "noir");
@@ -102,7 +102,7 @@ EngineTest.prototype.testHistoire10 = function () {
 };
 
 EngineTest.prototype.testHistoire11 = function () {
-    var e = new Engine("nm");
+    var e = new Engine();
     e.onPlayed("a1", "blanc");
     e.rotation("tl", "c");
     e.onPlayed("a1", "noir");
@@ -134,7 +134,7 @@ EngineTest.prototype.testHistoire11 = function () {
 };
 
 EngineTest.prototype.testVertical = function () {
-    var e = new Engine("nm");
+    var e = new Engine();
     e.choicePlayerBegin("noir");
     e.onPlayed("a1", "noir");
     e.onPlayed("a2", "noir");
@@ -151,7 +151,7 @@ EngineTest.prototype.testVertical = function () {
 };
 
 EngineTest.prototype.testDiagonal = function () {
-    var e = new Engine("nm");
+    var e = new Engine();
     e.choicePlayerBegin("noir");
     e.onPlayed("b6", "noir");
     e.onPlayed("c5", "noir");
@@ -163,7 +163,7 @@ EngineTest.prototype.testDiagonal = function () {
 };
 
 EngineTest.prototype.testHistoire12 = function () {
-    var e = new Engine("nm");
+    var e = new Engine();
     e.choicePlayerBegin("blanc");
     var moveList= "c4cbl;d4abr;c3ctl;c3ctl;c4cbl;e5cbr;b1ctl;b2ctr;c4cbl;c3ctr";
     e.playMoveList(moveList);
@@ -172,13 +172,13 @@ EngineTest.prototype.testHistoire12 = function () {
 };
 
 EngineTest.prototype.testHistoire13 = function () {
-    var e = new Engine("nm");
+    var e = new Engine();
     e.choicePlayerBegin("noir");
     assertTrue(e.currentPlayer() === 2);
 };
 
 EngineTest.prototype.testHistoire14 = function () {
-    var e = new Engine("nm");
+    var e = new Engine();
     e.choicePlayerBegin("blanc");
     var moveList1 = "a1cbl;d1cbr;b1cbl;e1cbr;c1cbl;f1cbr";
     var moveList2 = "a2cbl;d2cbr;b2cbl;e2cbr;c2cbl;f2cbr";
@@ -196,7 +196,7 @@ EngineTest.prototype.testHistoire14 = function () {
 };
 
 EngineTest.prototype.testHistoire15 = function () {
-    var e = new Engine("nm");
+    var e = new Engine();
     e.choicePlayerBegin("blanc");
     assertException(function () {
         e.onPlayed("a1", "noir")
