@@ -3,9 +3,14 @@ function ExceptionBoard() {
     this.name = "ExceptionBoard";
 }
 
+function ExceptionBadToken() {
+    "use strict";
+    this.name = "ExceptionBadToken";
+}
+
 var Engine = function () {
     "use strict";
-    var player1 = 1, player2 = 2, curPlayer, board = new Array(6), winer = 0;
+    var player1, player2, curPlayer, board, winer;
 
     var foreach = function (n, callback) {
         var i, j;
@@ -51,7 +56,6 @@ var Engine = function () {
         });
         return cpt;
     };
-
     this.getPlayer = function (tmp) {
         if (tmp === player1) {
             return "blanc";
@@ -62,6 +66,11 @@ var Engine = function () {
     };
 
     var init = function () {
+        player1 = 1;
+        player2 = 2;
+        curPlayer = 1;
+        board = new Array(6);
+        winer = 0;
         var i, j;
         board = newArray(6);
         for (i = 0; i < 6; i++) {
@@ -69,7 +78,14 @@ var Engine = function () {
                 board[i][j] = 0;
             }
         }
-        curPlayer = 1;
+    };
+    this.choicePlayerBegin = function (couleur) {
+        if (couleur === "blanc") {
+            curPlayer = 1;
+        } else {
+            curPlayer = 2;
+        }
+
     };
 
     this.getCase = function (coup) {
@@ -78,22 +94,28 @@ var Engine = function () {
         return board[ligne][colone];
 
     };
-
-
-    this.onPlayed = function (coup1) {
+    var getToken = function (token) {
+        if (token === "blanc") {
+            return 1;
+        }
+        return 2;
+    };
+    this.onPlayed = function (coup1, token) {
         var ligne = coup1.charCodeAt(0) - 97;
         var colone = coup1.charCodeAt(1) - 49;
-        if (board[ligne][colone] === 0) {
-            board[ligne][colone] = curPlayer;
-            this.testWin();
-        } else {
+        if (board[ligne][colone] !== 0) {
             throw new ExceptionBoard();
+        } else if (curPlayer !== getToken(token)) {
+            throw new ExceptionBadToken();
+        } else {
+            board[ligne][colone] = curPlayer;
+            this.testWin(ligne, colone);
         }
     };
 
     var rotaMiniBoard = function (tab1, direction) {
         var tab = newArray(3);
-        if (direction) {
+        if (direction === "c") {
             foreach(3, function (i, j) {
                 tab[i][j] = tab1[j][2 - i];
             });
@@ -108,13 +130,13 @@ var Engine = function () {
 
     var getPart = function (part) {
         var premI = 0, premJ = 0;
-        if (part === 2) {
+        if (part === "tr") {
             premI = 3;
         }
-        if (part === 3) {
+        if (part === "bl") {
             premJ = 3;
         }
-        if (part === 4) {
+        if (part === "br") {
             premI = 3;
             premJ = 3;
         }
@@ -144,45 +166,115 @@ var Engine = function () {
             curPlayer = 1;
         }
     };
+    var diago4 = function (beginC, beginL) {
+        var column = beginC, line = beginL, cpt = 0;
+        while (column !== 4) {
+            if (board[line][column] === curPlayer) {
+                cpt++;
+            }
+            column++;
+            line--;
+        }
+        return cpt;
+    };
+    var diago3 = function (beginC, beginL) {
+        var column = beginC, line = beginL, cpt = 0;
+        while (column !== 4) {
+            if (board[line][column] === curPlayer) {
+                cpt++;
+            }
+            column++;
+            line++;
+        }
+        return cpt;
+    };
+    var diago2 = function () {
+        var column = 0, line = 5, cpt = 0;
+        while (column !== 5) {
+            if (board[line][column] === curPlayer) {
+                cpt++;
+            }
+            column++;
+            line--;
+        }
+        return cpt;
+    };
+    var diago1 = function () {
+        var i = 0, cpt = 0;
+        while (i !== 5) {
+            if (board[i][i] === curPlayer) {
+                cpt++;
+            }
+            i++;
+        }
+        return cpt;
+    };
+    var winDgUp = function () {
+        if (diago2() >= 5 || diago4(0, 4) >= 5 || diago4(1, 5) >= 5) {
+            return 1;
+        }
+        return 0;
+    };
+    var winDgDown = function () {
+        if (diago1() >= 5 || diago3(0, 1) >= 5 || diago3(1, 0)) {
+            return 1;
+        }
+        return 0;
+    };
+    var winDg = function () {
+        if (winDgUp === 1 || winDgDown === 1) {
+            return 1;
+        }
+        return 0;
+    };
+    var winVt = function (column) {
+        var cpt = 0, i;
+        for (i = 0; i < 6; i++) {
+            if (board[i][column] === 0) {
+                cpt++;
+            }
+        }
 
-    var foreachHz = function (n, callback) {
-        var i;
-        for (i = 0; i < n; i++) {
-            callback(i);
+        return cpt;
+    };
+    var winHz = function (line) {
+        var cpt = 0, i;
+        for (i = 0; i < 6; i++) {
+            if (board[line][i] === 0) {
+                cpt++;
+            }
+        }
+
+        return cpt;
+    };
+    this.testWinPlayer = function (line, column) {
+        var resultHz, resultVt, resultDg;
+        resultHz = winHz(line);
+        resultVt = winVt(column);
+        resultDg = winDg();
+        if ((resultHz >= 5) || (resultVt >= 5) || (resultDg === 1)) {
+            winer = curPlayer;
         }
     };
-
-    var foreachVt = function (n, callback) {
-        var j;
-        for (j = 0; j < n; j++) {
-            callback(j);
+    this.testWin = function (line, column) {
+        this.testWinPlayer(line, column);
+        if (this.startToken() === 36) {
+            winer = -1;
         }
     };
-
-    this.testWin = function () {
-        var cpt1 = 0, cpt2 = 0;
-        foreachHz(6, function (i) {
-            foreachVt(6, function (j) {
-                if (board[j][i] === 1) {
-                    cpt1++;
-                    if (cpt1 === 5) {
-                        winer = 1;
-                        return 0;
-                    }
-                }
-                if (board[j][i] === 2) {
-                    cpt2++;
-                    if (cpt2 === 5) {
-                        winer = 2;
-                        return 0;
-                    }
-                }
-            });
-            cpt1 = 0;
-            cpt2 = 0;
-        });
+    this.playMoveList = function (baseList) {
+        var list = baseList.split(";"), i, move, direction, part;
+        for (i = 0; i < list.length; i++) {
+            move = list[i].charAt(0) + list[i].charAt(1);
+            direction = list[i].charAt(2);
+            part = list[i].charAt(3) + list[i].charAt(4);
+            this.onPlayed(move, this.getPlayer(curPlayer));
+            if (direction) {
+                this.rotation(part, direction);
+            }
+        }
     };
-    this.getWiner = function () {
+    this.getWinner = function () {
         return winer;
     };
     init();
