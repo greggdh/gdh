@@ -8,9 +8,9 @@ function ExceptionBadToken() {
     this.name = "ExceptionBadToken";
 }
 
-var Engine = function () {
+var Engine = function (size, nbPlayer) {
     "use strict";
-    var player1, player2, curPlayer, board, winer;
+    var player1, player2, player3, player4, curPlayer, board, winer;
 
     var foreach = function (n, callback) {
         var i, j;
@@ -56,28 +56,25 @@ var Engine = function () {
         });
         return cpt;
     };
-    this.getPlayer = function (tmp) {
-        if (tmp === player1) {
+    this.getPlayer = function () {
+        if (curPlayer === player1) {
             return "blanc";
         }
-        if (tmp === player2) {
-            return "noir";
-        }
+        return "noir";
     };
 
-    var init = function () {
+    var initNm = function () {
         player1 = 1;
         player2 = 2;
+        player3 = null;
+        player4 = null;
         curPlayer = 1;
         board = new Array(6);
         winer = 0;
-        var i, j;
         board = newArray(6);
-        for (i = 0; i < 6; i++) {
-            for (j = 0; j < 6; j++) {
-                board[i][j] = 0;
-            }
-        }
+        boardLoop(function (i, j) {
+            board[i][j] = 0;
+        });
     };
     this.choicePlayerBegin = function (couleur) {
         if (couleur === "blanc") {
@@ -268,7 +265,7 @@ var Engine = function () {
             move = list[i].charAt(0) + list[i].charAt(1);
             direction = list[i].charAt(2);
             part = list[i].charAt(3) + list[i].charAt(4);
-            this.onPlayed(move, this.getPlayer(curPlayer));
+            this.onPlayed(move, this.getPlayer());
             if (direction) {
                 this.rotation(part, direction);
             }
@@ -277,5 +274,6 @@ var Engine = function () {
     this.getWinner = function () {
         return winer;
     };
-    init();
+
+    initNm();
 };
