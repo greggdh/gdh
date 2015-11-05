@@ -8,7 +8,7 @@ function ExceptionBadToken() {
     this.name = "ExceptionBadToken";
 }
 
-var Engine = function (size, nbPlayer) {
+var Engine = function () {
     "use strict";
     var player1, player2, player3, player4, curPlayer, board, winer;
 
