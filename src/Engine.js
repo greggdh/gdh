@@ -8,9 +8,9 @@ function ExceptionBadToken() {
     this.name = "ExceptionBadToken";
 }
 
-var Engine = function () {
+var Engine = function (type, nbPlayer) {
     "use strict";
-    var player1, player2, player3, player4, curPlayer, board, winer;
+    var player1, player2, player3, player4, player1For3, player2For3, player3For3, curPlayer, board, winer;
 
     var foreach = function (n, callback) {
         var i, j;
@@ -56,11 +56,41 @@ var Engine = function () {
         });
         return cpt;
     };
-    this.getPlayer = function () {
+    var getPlayerXl3 = function () {
+        if (curPlayer === 1) {
+            return player1For3;
+        }
+        if (curPlayer === 2){
+            return player3For3;
+        }
+        return player3For3;
+    };
+    var getPlayerNm = function () {
         if (curPlayer === player1) {
             return "blanc";
         }
         return "noir";
+    };
+    var getPlayerXl4 = function () {
+        if (curPlayer === player1) {
+            return "rouge";
+        }
+        if (curPlayer === player2) {
+            return "jaune";
+        }
+        if (curPlayer === player3) {
+            return "vert";
+        }
+        return "bleu";
+    };
+    this.getPlayer = function () {
+        if (type === "nm") {
+            return getPlayerNm();
+        }
+        if (nbPlayer === 4) {
+            return getPlayerXl4();
+        }
+        return getPlayerXl3();
     };
 
     var initNm = function () {
@@ -71,10 +101,38 @@ var Engine = function () {
         curPlayer = 1;
         board = new Array(6);
         winer = 0;
+        var i, j;
         board = newArray(6);
-        boardLoop(function (i, j) {
-            board[i][j] = 0;
-        });
+        for (i = 0; i < 6; i++) {
+            for (j = 0; j < 6; j++) {
+                board[i][j] = 0;
+            }
+        }
+    };
+    var initXl = function () {
+        player1 = 1;
+        player2 = 2;
+        player3 = 3;
+        player4 = null;
+        if (nbPlayer === 4) {
+            player4 = 4;
+        }
+        player4 = null;
+        curPlayer = 1;
+        board = new Array(9);
+        winer = 0;
+        var i, j;
+        board = newArray(9);
+        for (i = 0; i < 9; i++) {
+            for (j = 0; j < 9; j++) {
+                board[i][j] = 0;
+            }
+        }
+    };
+    this.choicePlayer = function (couleur1, couleur2, couleur3) {
+        player1For3 = couleur1;
+        player2For3 = couleur2;
+        player3For3 = couleur3;
     };
     this.choicePlayerBegin = function (couleur) {
         if (couleur === "blanc") {
@@ -91,11 +149,41 @@ var Engine = function () {
         return board[ligne][colone];
 
     };
-    var getToken = function (token) {
+    var getTokenNm = function (token) {
         if (token === "blanc") {
             return 1;
         }
         return 2;
+    };
+    var getTokenXl3 = function (token) {
+        if (token === player1For3) {
+            return 1;
+        }
+        if (token === player2For3) {
+            return 2;
+        }
+        return 3;
+    };
+    var getTokenXl4 = function (token) {
+        if (token === "rouge") {
+            return 1;
+        }
+        if (token === "jaune") {
+            return 2;
+        }
+        if (token === "vert") {
+            return 3;
+        }
+        return 4;
+    };
+    var getToken = function (token) {
+        if (type === "nm") {
+            return getTokenNm(token);
+        }
+        if (nbPlayer === 3) {
+            return getTokenXl3(token);
+        }
+        return getTokenXl4(token);
     };
     this.onPlayed = function (coup1, token) {
         var ligne = coup1.charCodeAt(0) - 97;
@@ -109,7 +197,6 @@ var Engine = function () {
             this.testWin(ligne, colone);
         }
     };
-
     var rotaMiniBoard = function (tab1, direction) {
         var tab = newArray(3);
         if (direction === "c") {
@@ -155,12 +242,42 @@ var Engine = function () {
         });
         this.nextPlayer();
     };
-
-    this.nextPlayer = function () {
+    var nextPlayerNm = function () {
         if (curPlayer === 1) {
-            curPlayer = 2;
+            return 2;
+        }
+        return 1;
+    };
+    var nextPlayerXl3 = function () {
+        if (curPlayer === 1) {
+            return 2;
+        }
+        if (curPlayer === 2) {
+            return 3;
+        }
+        return 1;
+    };
+    var nextPlayerXl4 = function () {
+        if (curPlayer === 1) {
+            return 2;
+        }
+        if (curPlayer === 2) {
+            return 3;
+        }
+        if (curPlayer === 3) {
+            return 4;
+        }
+        return 1;
+    };
+    this.nextPlayer = function () {
+        if (type === "nm") {
+            curPlayer = nextPlayerNm();
         } else {
-            curPlayer = 1;
+            if (nbPlayer === 3) {
+                curPlayer = nextPlayerXl3();
+            } else {
+                curPlayer = nextPlayerXl4();
+            }
         }
     };
     var diago4 = function (beginC, beginL) {
@@ -271,9 +388,28 @@ var Engine = function () {
             }
         }
     };
+    /*this.randomGame = function () {
+        var line, column, part = new Array(4), direction = new Array(2), indiceDirection, indicePart;
+        direction = ["c", "a"];
+        part = ["tl", "tr", "bl", "br"];
+        while (winer === 0) {
+            do {
+                line = parseInt(Math.random() * 10) % 5;
+                column = parseInt(Math.random() * 10) % 5;
+            } while (board[line][column] === 0);
+            board[line][column] = curPlayer;
+            this.testWin(line, column);
+            indiceDirection =  parseInt(Math.random() * 10) % 1;
+            indicePart = parseInt(Math.random() * 10) % 3;
+            this.rotation(part[indicePart], direction[indiceDirection]);
+        }
+    };*/
     this.getWinner = function () {
         return winer;
     };
-
-    initNm();
+    if (type === "nm") {
+        initNm();
+    } else {
+        initXl();
+    }
 };
